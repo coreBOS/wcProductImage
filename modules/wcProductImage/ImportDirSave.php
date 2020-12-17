@@ -84,6 +84,7 @@ if (!is_dir($imgdir)) {
 		// 	finfo_close($finfo);
 		// }
 		$fname = pathinfo($filename, PATHINFO_FILENAME);
+		$fext = pathinfo($filename, PATHINFO_EXTENSION);
 		if (strpos($fname, '-')>0) {
 			list($pdocode, $vname) = explode('-', $fname);
 			$pdo = $adb->pquery($pdoQuery, array($pdocode));
@@ -93,11 +94,11 @@ if (!is_dir($imgdir)) {
 		if ($pdo && $adb->num_rows($pdo)>0) {
 			$focus->column_fields['wcpirelated'] = $wsPdo.$adb->query_result($pdo, 0, 'productid');
 			$focus->column_fields['wcpiname'] = $pdocode;
-			$focus->column_fields['wcpimage'] = $filename;
+			$focus->column_fields['wcpimage'] = $pdocode.'.'.$fext;
 			$focus->id = 0;
 			$focus->mode = '';
 			$model_filename=array(
-				'name'=>$pdocode,  // no slash nor paths in the name
+				'name'=>$pdocode.'.'.$fext,  // no slash nor paths in the name
 				'size'=>filesize($imgdir.'/'.$filename),
 				'type'=> mime_content_type($imgdir.'/'.$filename),
 				'content'=>base64_encode(file_get_contents($imgdir.'/'.$filename)),
